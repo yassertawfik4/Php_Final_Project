@@ -28,7 +28,7 @@ class User {
 public function getAll($limit = 10, $offset = 0) {
 
     $stmt = $this->pdo->prepare(
-        "SELECT id, name, email, room_no, ext, profile_picture, role, created_at
+        "SELECT id, name, email, room, ext, image, role, created_at
          FROM users 
          WHERE role = 'user'
          LIMIT :limit OFFSET :offset"
@@ -49,16 +49,16 @@ public function getAll($limit = 10, $offset = 0) {
     // Create a new user (admin adds user)
     public function create($data) {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO users (name, email, password, room_no, ext, profile_picture, role)
-             VALUES (:name, :email, :password, :room_no, :ext, :profile_picture, :role)"
+            "INSERT INTO users (name, email, password, room, ext, image, role)
+             VALUES (:name, :email, :password, :room, :ext, :image, :role)"
         );
         $stmt->execute([
             ':name'            => $data['name'],
             ':email'           => $data['email'],
             ':password'        => password_hash($data['password'], PASSWORD_BCRYPT),
-            ':room_no'         => $data['room_no']         ?? null,
+            ':room'         => $data['room']         ?? null,
             ':ext'             => $data['ext']             ?? null,
-            ':profile_picture' => $data['profile_picture'] ?? null,
+            ':image' => $data['image'] ?? null,
             ':role'            => $data['role']            ?? 'user',
         ]);
         return $this->pdo->lastInsertId();
@@ -66,11 +66,11 @@ public function getAll($limit = 10, $offset = 0) {
 
     // Update user
     public function update($id, $data) {
-        $fields = "name=:name, email=:email, room_no=:room_no, ext=:ext";
+        $fields = "name=:name, email=:email, room=:room, ext=:ext";
         $params = [
             ':name'    => $data['name'],
             ':email'   => $data['email'],
-            ':room_no' => $data['room_no'] ?? null,
+            ':room' => $data['room'] ?? null,
             ':ext'     => $data['ext']     ?? null,
             ':id'      => $id,
         ];
@@ -79,9 +79,9 @@ public function getAll($limit = 10, $offset = 0) {
             $fields .= ", password=:password";
             $params[':password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         }
-        if (!empty($data['profile_picture'])) {
-            $fields .= ", profile_picture=:profile_picture";
-            $params[':profile_picture'] = $data['profile_picture'];
+        if (!empty($data['image'])) {
+            $fields .= ", image=:image";
+            $params[':image'] = $data['image'];
         }
 
         $stmt = $this->pdo->prepare("UPDATE users SET $fields WHERE id = :id");
