@@ -1,6 +1,7 @@
 <?php
 require_once BASE_PATH . "/controllers/UserController.php";
 require_once BASE_PATH . "/controllers/AuthController.php";
+require_once BASE_PATH . "/controllers/AdminController.php";
 $page   = $_GET['page'] ?? 'login';
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($page){
@@ -56,10 +57,18 @@ switch ($page){
             (new UserController())->delete();
         }
         break;
+
     case 'admin.dashboard':
-        require_once BASE_PATH . '/includes/auth_check.php';
-        require_role('admin');
-        require_once BASE_PATH . '/views/admin/dashboard.php';
+        (new AdminController())->dashboard();
+        break;
+
+    case 'admin.update_order_status':
+        if ($method === 'POST') {
+            (new AdminController())->updateOrderStatus();
+        } else {
+            header('Location: ' . BASE_URL . '/?page=admin.dashboard');
+            exit;
+        }
         break;
 }
 
