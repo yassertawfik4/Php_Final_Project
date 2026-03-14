@@ -16,7 +16,13 @@ switch ($page){
             (new UserController())->add();
         }
         break;
+    case 'admin.show_update_user':
+        (new UserController())->showUpdateForm();
+        break;
     case 'admin.update_user':
+        if ($method === 'POST') {
+            (new UserController())->update();
+        }
         break;
 
     case 'admin.delete_user':
