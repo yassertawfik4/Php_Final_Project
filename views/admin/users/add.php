@@ -1,4 +1,7 @@
-<?php require_once BASE_PATH . '/includes/header.php'; ?>
+<?php
+	require_once BASE_PATH . '/includes/header.php'; 
+	require_once BASE_PATH . '/includes/navbar.php';
+?>
 
 <div class="container py-4">
 	<h2 class="mb-3">Add User</h2>

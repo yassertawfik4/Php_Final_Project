@@ -1,4 +1,7 @@
-<?php require_once BASE_PATH . '/includes/header.php'; ?>
+<?php 
+	require_once BASE_PATH . '/includes/header.php'; 
+	require_once BASE_PATH . '/includes/navbar.php';
+?>
 
 <div class="container py-4">
 	<div class="d-flex justify-content-between align-items-center mb-3">
@@ -46,17 +49,6 @@
 			</table>
 		</div>
 
-		<?php if ($totalPages > 1): ?>
-			<nav>
-				<ul class="pagination">
-					<?php for ($i = 1; $i <= $totalPages; $i++): ?>
-						<li class="page-item <?= $i === $pageNum ? 'active' : '' ?>">
-							<a class="page-link" href="<?= BASE_URL ?>/?page=admin.users&p=<?= $i ?>"><?= $i ?></a>
-						</li>
-					<?php endfor; ?>
-				</ul>
-			</nav>
-		<?php endif; ?>
 	<?php endif; ?>
 </div>
 
