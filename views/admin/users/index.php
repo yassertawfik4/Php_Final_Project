@@ -35,7 +35,7 @@
 							<td><?= htmlspecialchars($user['created_at'] ?? '') ?></td>
 							<td class="text-end">
 								<a class="btn btn-sm btn-outline-secondary" href="<?= BASE_URL ?>/?page=admin.show_update_user&id=<?= (int)$user['id'] ?>">Edit</a>
-								<form class="d-inline" method="post" action="<?= BASE_URL ?>/?page=admin.delete_user" onsubmit="return confirm('Delete this user?');">
+								<form class="d-inline" method="post" action="<?= BASE_URL ?>/?page=admin.delete_user">
 									<input type="hidden" name="id" value="<?= (int)$user['id'] ?>">
 									<button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
 								</form>

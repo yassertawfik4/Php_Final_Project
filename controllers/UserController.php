@@ -156,4 +156,24 @@ class UserController
         exit;
     }
 
+    public function delete()
+    {
+        require_once BASE_PATH . '/includes/auth_check.php';
+        require_role('admin');
+
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id <= 0) {
+            header('Location: ' . BASE_URL . '/?page=admin.users');
+            exit;
+        }
+
+            $imagePath = BASE_PATH . '/public/uploads/' . $this->userModel->findById($id)['image'];
+            $this->userModel->delete($id);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        header('Location: ' . BASE_URL . '/?page=admin.users');
+        exit;
+    }
+
 }

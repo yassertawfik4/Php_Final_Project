@@ -26,6 +26,9 @@ switch ($page){
         break;
 
     case 'admin.delete_user':
+        if ($method === 'POST') {
+            (new UserController())->delete();
+        }
         break;
 }
 
