@@ -1,6 +1,6 @@
 <?php
 require_once BASE_PATH . "/controllers/UserController.php";
-
+require_once BASE_PATH . "/controllers/OrderController.php";
 $page   = $_GET['page'] ?? 'login';
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($page){
@@ -30,6 +30,11 @@ switch ($page){
             (new UserController())->delete();
         }
         break;
+        //  case 'confirm_order':
+        // if ($method === 'POST') {
+        //     (new OrderController())->place();
+        // }
+        // break;
 }
 
 ?>

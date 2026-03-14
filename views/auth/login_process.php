@@ -1,21 +1,23 @@
 <?php
+require_once '../../config/database.php';
+$conn = getDB();
 
-$conn = mysqli_connect("localhost","root","","cafeteria");
 
 $email = $_POST['email'];
 $password = $_POST['password'];
 
-$query = "SELECT * FROM users WHERE email='$email'";
-$result = mysqli_query($conn,$query);
+$stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
+$stmt->execute([$_POST['email']]);
 
-$user = mysqli_fetch_assoc($result);
+$user = $stmt->fetch();
 
  if($user && password_verify($password, $user['password'])){
 // if($user && $password == $user['password']){
     session_start();
     $_SESSION['user'] = $email;
 
-    header("Location: home.php");
+  header("Location: ../user/home.php");
+
 
 }else{
 

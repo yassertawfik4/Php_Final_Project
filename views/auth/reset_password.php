@@ -1,6 +1,7 @@
 <?php
 
-$conn = mysqli_connect("localhost","root","","cafeteria");
+require_once '../../config/database.php';
+$conn = getDB();
 
 $email = $_POST['email'];
 $password = $_POST['password'];
@@ -17,11 +18,20 @@ exit;
 
  $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$query = "UPDATE users SET password='$hashedPassword' WHERE email='$email'";
-mysqli_query($conn,$query);
+$stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
+$stmt->execute([$_POST['email']]);
 
-echo "<div class='alert alert-success text-center'>
+if($stmt->rowCount() > 0){
+    $stmt = $conn->prepare("UPDATE users SET password=? WHERE email=?");
+    $stmt->execute([$hashedPassword, $_POST['email']]);
+    echo "<div class='alert alert-success text-center'>
 Password updated successfully
 </div>";
+header("Location: login.php");
 
+} else {
+    echo "<div class='alert alert-danger text-center'>
+User not found
+</div>";
+}
 ?>
