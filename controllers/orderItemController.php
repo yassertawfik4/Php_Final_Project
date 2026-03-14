@@ -5,10 +5,10 @@ require_once BASE_PATH . '/models/Order.php';
 require_once BASE_PATH . '/models/OrderItem.php';
 
 /**
- * AdminController
+ * OrderItemController
  * Handles admin dashboard and order management functionality
  */
-class AdminController
+class OrderItemController
 {
     private Order $orderModel;
     private OrderItem $orderItemModel;
