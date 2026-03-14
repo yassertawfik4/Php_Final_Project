@@ -9,8 +9,13 @@ switch ($page){
         break;
 
     case 'admin.add_user':
+        (new UserController())->showAddForm();
         break;
-
+    case 'admin.create_user':
+        if ($method === 'POST') {
+            (new UserController())->add();
+        }
+        break;
     case 'admin.update_user':
         break;
 

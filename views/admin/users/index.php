@@ -26,7 +26,7 @@
 				<tbody>
 					<?php foreach ($users as $user): ?>
 						<tr>
-                            <td><img src="<?=BASE_URL.htmlspecialchars($user['image'] ?? '') ?>" alt="User Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"></td>
+                            <td><img src="<?=BASE_URL?>/public/uploads/<?=htmlspecialchars($user['image'] ?? '')?>" alt="User Image" class="img-thumbnail" style="max-width: 100px; max-height: 100px;"></td>
 							<td><?= htmlspecialchars($user['name'] ?? '') ?></td>
 							<td><?= htmlspecialchars($user['email'] ?? '') ?></td>
 							<td><?= htmlspecialchars($user['room'] ?? '') ?></td>
