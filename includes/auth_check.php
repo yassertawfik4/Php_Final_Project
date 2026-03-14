@@ -7,15 +7,10 @@ function require_role(string $required_role): void
         header('Location: ' . BASE_URL . '/?page=login');
         exit;
     }
-
     $role = $_SESSION['user_role'] ?? '';
     if ($required_role === 'admin' && $role !== 'admin') {
         http_response_code(403);
         die('<h3 class="text-center mt-5 text-danger">403 – Access Denied</h3>');
-    }
-    if ($required_role === 'user' && ($role=='user'||$role=='admin')) {
-        header('Location: ' . BASE_URL . '/?page=login');
-        exit;
     }
 
     // ── حفظ الـ flash message في الـ session ──

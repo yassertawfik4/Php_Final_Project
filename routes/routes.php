@@ -1,9 +1,35 @@
 <?php
 require_once BASE_PATH . "/controllers/UserController.php";
-require_once BASE_PATH . "/controllers/OrderController.php";
+require_once BASE_PATH . "/controllers/AuthController.php";
 $page   = $_GET['page'] ?? 'login';
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($page){
+    case 'login':
+        if ($method === 'POST') {
+            (new AuthController())->handleLogin();
+        } else {
+            (new AuthController())->showLogin();
+        }
+        break;
+
+    case 'logout':
+        (new AuthController())->logout();
+        break;
+
+    
+    case 'home':
+        require_once BASE_PATH . '/includes/auth_check.php';
+        require_role('user');
+        require_once BASE_PATH . '/views/user/home.php';
+        break;
+    
+    case 'orders':
+        require_once BASE_PATH . '/includes/auth_check.php';
+        require_role('user');
+        require_once BASE_PATH . '/views/user/orders.php';
+        break;
+
+
     case 'admin.users':
         (new UserController())->index();
         break;
@@ -30,11 +56,11 @@ switch ($page){
             (new UserController())->delete();
         }
         break;
-        //  case 'confirm_order':
-        // if ($method === 'POST') {
-        //     (new OrderController())->place();
-        // }
-        // break;
+    case 'admin.dashboard':
+        require_once BASE_PATH . '/includes/auth_check.php';
+        require_role('admin');
+        require_once BASE_PATH . '/views/admin/dashboard.php';
+        break;
 }
 
 ?>
