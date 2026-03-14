@@ -17,20 +17,20 @@ class UserController
     public function index()
     {
         require_once BASE_PATH . '/includes/auth_check.php';
-        #require_role('admin');
+        require_role('admin');
         $users=$this->userModel->getAll();
         require_once BASE_PATH .'/views/admin/users/index.php';
     }
     public function showAddForm(): void
     {
         require_once BASE_PATH . '/includes/auth_check.php';
-        #require_role('admin');
+        require_role('admin');
         require_once BASE_PATH . '/views/admin/users/add.php';
     }
     public function add()
     {
         require_once BASE_PATH . '/includes/auth_check.php';
-        #require_role('admin');
+        require_role('admin');
 
         $data = [
             'name' => trim($_POST['name'] ?? ''),
@@ -84,7 +84,7 @@ class UserController
     public function showUpdateForm(): void
     {
         require_once BASE_PATH . '/includes/auth_check.php';
-        #require_role('admin');
+        require_role('admin');
 
         $id = (int)($_GET['id'] ?? 0);
         if ($id <= 0) {
@@ -102,7 +102,7 @@ class UserController
     public function update()
     {
         require_once BASE_PATH . '/includes/auth_check.php';
-        #require_role('admin');
+        require_role('admin');
 
         $id = (int)($_POST['id'] ?? 0);
         if ($id <= 0) {
@@ -127,30 +127,22 @@ class UserController
             $errors[] = 'Email is required.';
         }
 
-        if (!empty($_FILES['image']) && $_FILES['image']['error'] !== UPLOAD_ERR_NO_FILE) {
-            if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $uploadDir = BASE_PATH . '/public/uploads';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+        if (!empty($_FILES['image']['name'])) {
+    
+            $uploadDir = BASE_PATH . '/public/uploads/';
+            
+            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $fileName = $data['name'] . '_' . time() . '.' . strtolower($ext);
 
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $safeName = preg_replace('/[^a-z0-9_-]+/i', '_', $data['name']);
-                $timestamp = date('Ymd_His');
-                $fileName = $safeName . '_' . $timestamp;
-                if ($ext !== '') {
-                    $fileName .= '.' . strtolower($ext);
-                }
+            $targetPath = $uploadDir . $fileName;
 
-                $targetPath = $uploadDir . '/' . $fileName;
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-                    $data['image'] = $fileName;
-                } else {
-                    $errors[] = 'Failed to upload image.';
-                }
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+                $data['image'] = $fileName;
             } else {
-                $errors[] = 'Image upload error.';
+                $errors[] = 'Failed to upload image.';
             }
+        } else {
+            unset($data['image']); 
         }
 
         if ($errors) {
