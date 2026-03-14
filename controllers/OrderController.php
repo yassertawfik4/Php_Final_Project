@@ -1,9 +1,15 @@
 <?php
 session_start();
-require_once '../config/database.php';
-require_once '../models/Order.php';
-require_once '../models/OrderItem.php';
-require_once '../models/Product.php';
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(__DIR__));
+}
+if (!defined('BASE_URL')) {
+    define('BASE_URL', '/Php_Final_Project');
+}
+require_once BASE_PATH . '/config/database.php';
+require_once BASE_PATH . '/models/Order.php';
+require_once BASE_PATH . '/models/OrderItem.php';
+require_once BASE_PATH . '/models/Product.php';
 
 $pdo            = getDB();
 $orderModel     = new Order($pdo);
@@ -11,17 +17,18 @@ $orderItemModel = new OrderItem($pdo);
 $productModel   = new Product($pdo);
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../views/auth/login.php');
+    header('Location: ' . BASE_URL . '/?page=login');
     exit;
 }
+$role = $_SESSION['role'] ?? $_SESSION['user_role'] ?? '';
 $action = $_POST['action'] ?? $_GET['action'] ?? '';
 switch ($action) {
     case 'place':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ../views/user/home.php');
+            header('Location: ' . BASE_URL . '/?page=admin.manual_order');
             exit;
         }
-        if ($_SESSION['role'] === 'admin' && !empty($_POST['user_id'])) {
+        if ($role === 'admin' && !empty($_POST['user_id'])) {
             $userId = (int) $_POST['user_id'];
         } else {
             $userId = (int) $_SESSION['user_id'];
@@ -39,9 +46,10 @@ switch ($action) {
 
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
-            $redirect = ($_SESSION['role'] === 'admin')
-                ? '../views/admin/manual_order.php'
-                : '../views/user/home.php';
+            $_SESSION['old_manual_order'] = ['room' => $room, 'notes' => $notes, 'user_id' => $userId];
+            $redirect = ($role === 'admin')
+                ? BASE_URL . '/?page=admin.manual_order'
+                : BASE_URL . '/';
             header("Location: $redirect");
             exit;
         }
@@ -64,9 +72,10 @@ switch ($action) {
         }
         if (empty($validItems)) {
             $_SESSION['errors'] = ['No valid items found. Please try again.'];
-            $redirect = ($_SESSION['role'] === 'admin')
-                ? '../views/admin/manual_order.php'
-                : '../views/user/home.php';
+            $_SESSION['old_manual_order'] = ['room' => $room, 'notes' => $notes, 'user_id' => $userId];
+            $redirect = ($role === 'admin')
+                ? BASE_URL . '/?page=admin.manual_order'
+                : BASE_URL . '/';
             header("Location: $redirect");
             exit;
         }
@@ -80,23 +89,23 @@ switch ($action) {
             );
         }
 
-        $_SESSION['success'] = 'Order placed successfully!';
+        $_SESSION['success'] = 'Order #' . $orderId . ' placed successfully.';
 
-        $redirect = ($_SESSION['role'] === 'admin')
-            ? '../views/admin/manual_order.php'
-            : '../views/user/home.php';
+        $redirect = ($role === 'admin')
+            ? BASE_URL . '/?page=admin.manual_order'
+            : BASE_URL . '/';
         header("Location: $redirect");
         exit;
 
     case 'cancel':
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ../views/user/orders.php');
+            header('Location: ' . BASE_URL . '/?page=user.orders');
             exit;
         }
 
-        if ($_SESSION['role'] !== 'user') {
-            header('Location: ../views/user/orders.php');
+        if ($role !== 'user') {
+            header('Location: ' . BASE_URL . '/?page=user.orders');
             exit;
         }
 
@@ -104,73 +113,73 @@ switch ($action) {
 
         if ($orderId <= 0) {
             $_SESSION['errors'] = ['Invalid order.'];
-            header('Location: ../views/user/orders.php');
+            header('Location: ' . BASE_URL . '/?page=user.orders');
             exit;
         }
         $order = $orderModel->findById($orderId);
 
         if (!$order) {
             $_SESSION['errors'] = ['Order not found.'];
-            header('Location: ../views/user/orders.php');
+            header('Location: ' . BASE_URL . '/?page=user.orders');
             exit;
         }
 
         if ($order['user_id'] != $_SESSION['user_id']) {
             $_SESSION['errors'] = ['Unauthorized action.'];
-            header('Location: ../views/user/orders.php');
+            header('Location: ' . BASE_URL . '/?page=user.orders');
             exit;
         }
 
         if ($order['status'] !== 'processing') {
             $_SESSION['errors'] = ['Only processing orders can be cancelled.'];
-            header('Location: ../views/user/orders.php');
+            header('Location: ' . BASE_URL . '/?page=user.orders');
             exit;
         }
         $orderModel->cancel($orderId, $_SESSION['user_id']);
         $_SESSION['success'] = 'Order cancelled successfully.';
-        header('Location: ../views/user/orders.php');
+        header('Location: ' . BASE_URL . '/?page=user.orders');
         exit;
 
     case 'deliver':
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ../views/admin/dashboard.php');
+            header('Location: ' . BASE_URL . '/');
             exit;
         }
-        if ($_SESSION['role'] !== 'admin') {
-            header('Location: ../views/auth/login.php');
+        if ($role !== 'admin') {
+            header('Location: ' . BASE_URL . '/?page=login');
             exit;
         }
         $orderId = (int) ($_POST['order_id'] ?? 0);
         if ($orderId <= 0) {
             $_SESSION['errors'] = ['Invalid order.'];
-            header('Location: ../views/admin/dashboard.php');
+            header('Location: ' . BASE_URL . '/');
             exit;
         }
         $orderModel->updateStatus($orderId, 'out_for_delivery');
         $_SESSION['success'] = 'Order is now out for delivery.';
-        header('Location: ../views/admin/dashboard.php');
+        header('Location: ' . BASE_URL . '/');
         exit;
     case 'done':
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: ../views/admin/dashboard.php');
+            header('Location: ' . BASE_URL . '/');
             exit;
         }
-        if ($_SESSION['role'] !== 'admin') {
-            header('Location: ../views/auth/login.php');
+        if ($role !== 'admin') {
+            header('Location: ' . BASE_URL . '/?page=login');
             exit;
         }
         $orderId = (int) ($_POST['order_id'] ?? 0);
         if ($orderId <= 0) {
             $_SESSION['errors'] = ['Invalid order.'];
-            header('Location: ../views/admin/dashboard.php');
+            header('Location: ' . BASE_URL . '/');
             exit;
         }
         $orderModel->updateStatus($orderId, 'done');
         $_SESSION['success'] = 'Order marked as done.';
-        header('Location: ../views/admin/dashboard.php');
+        header('Location: ' . BASE_URL . '/');
         exit;
     default:
-        header('Location: ../views/auth/login.php');
+        header('Location: ' . BASE_URL . '/?page=login');
         exit;
 }
