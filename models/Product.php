@@ -13,7 +13,7 @@ class Product {
             "SELECT p.*, c.name AS category_name
              FROM products p
              JOIN categories c ON c.id = p.category_id
-             WHERE p.is_available = 1
+             WHERE p.available = 1
              ORDER BY c.name, p.name"
         );
         return $stmt->fetchAll();
