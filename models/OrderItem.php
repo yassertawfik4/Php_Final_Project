@@ -27,6 +27,40 @@ class OrderItem {
         $stmt->execute([$orderId]);
         return $stmt->fetchAll();
     }
+
+    public function getByOrderIds(array $orderIds) {
+        if (empty($orderIds)) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($orderIds), '?'));
+        $stmt = $this->pdo->prepare(
+            "SELECT oi.*, p.name AS product_name, p.image AS product_image
+             FROM order_items oi
+             JOIN products p ON oi.product_id = p.id
+             WHERE oi.order_id IN ($placeholders)
+             ORDER BY oi.id ASC"
+        );
+
+        foreach ($orderIds as $index => $orderId) {
+            $stmt->bindValue($index + 1, (int)$orderId, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        $items = $stmt->fetchAll();
+
+        $grouped = [];
+        foreach ($items as $item) {
+            $id = (int)$item['order_id'];
+            if (!isset($grouped[$id])) {
+                $grouped[$id] = [];
+            }
+            $grouped[$id][] = $item;
+        }
+
+        return $grouped;
+    }
+
     public function deleteByOrder($orderId) {
         $stmt = $this->pdo->prepare(
             "DELETE FROM order_items WHERE order_id = ?"

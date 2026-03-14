@@ -100,6 +100,40 @@ class Order {
         $stmt->execute($params);
         return $stmt->fetchAll();
     }
+
+    public function getDashboardStats() {
+        $sql = "
+            SELECT
+                SUM(CASE WHEN status = 'processing' THEN 1 ELSE 0 END) AS processing,
+                SUM(CASE WHEN status = 'out_for_delivery' THEN 1 ELSE 0 END) AS out_for_delivery,
+                SUM(CASE WHEN status = 'done' AND DATE(created_at) = CURDATE() THEN 1 ELSE 0 END) AS done_today,
+                SUM(CASE WHEN status = 'done' AND DATE(created_at) = CURDATE() THEN total_price ELSE 0 END) AS today_revenue
+            FROM orders
+        ";
+
+        $stmt = $this->pdo->query($sql);
+        $stats = $stmt->fetch() ?: [];
+
+        return [
+            'processing' => (int)($stats['processing'] ?? 0),
+            'out_for_delivery' => (int)($stats['out_for_delivery'] ?? 0),
+            'done_today' => (int)($stats['done_today'] ?? 0),
+            'today_revenue' => (float)($stats['today_revenue'] ?? 0),
+        ];
+    }
+
+    public function getCurrentOrders() {
+        $stmt = $this->pdo->prepare(
+            "SELECT o.*, u.name AS user_name, u.ext
+             FROM orders o
+             JOIN users u ON o.user_id = u.id
+             WHERE o.status IN ('processing', 'out_for_delivery')
+             ORDER BY o.created_at DESC"
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public function getByUserAndDate($userId, $dateFrom, $dateTo) {
         $stmt = $this->pdo->prepare(
             "SELECT * FROM orders
