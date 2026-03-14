@@ -17,4 +17,22 @@ function require_role(string $required_role): void
         header('Location: ' . BASE_URL . '/?page=login');
         exit;
     }
+
+    // ── حفظ الـ flash message في الـ session ──
+function setFlash($type, $message) {
+    $_SESSION['flash'] = [
+        'type'    => $type,
+        'message' => $message
+    ];
+}
+
+// ── جيب الـ flash وامسحه عشان يظهر مرة واحدة بس ──
+function getFlash() {
+    if (isset($_SESSION['flash'])) {
+        $flash = $_SESSION['flash'];
+        unset($_SESSION['flash']);
+        return $flash;
+    }
+    return null;
+}
 }
