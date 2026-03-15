@@ -12,22 +12,26 @@ function require_role(string $required_role): void
         http_response_code(403);
         die('<h3 class="text-center mt-5 text-danger">403 – Access Denied</h3>');
     }
+}
 
-    // ── حفظ الـ flash message في الـ session ──
-function setFlash($type, $message) {
-    $_SESSION['flash'] = [
-        'type'    => $type,
-        'message' => $message
-    ];
+// ── حفظ الـ flash message في الـ session ──
+if (!function_exists('setFlash')) {
+    function setFlash($type, $message) {
+        $_SESSION['flash'] = [
+            'type'    => $type,
+            'message' => $message
+        ];
+    }
 }
 
 // ── جيب الـ flash وامسحه عشان يظهر مرة واحدة بس ──
-function getFlash() {
-    if (isset($_SESSION['flash'])) {
-        $flash = $_SESSION['flash'];
-        unset($_SESSION['flash']);
-        return $flash;
+if (!function_exists('getFlash')) {
+    function getFlash() {
+        if (isset($_SESSION['flash'])) {
+            $flash = $_SESSION['flash'];
+            unset($_SESSION['flash']);
+            return $flash;
+        }
+        return null;
     }
-    return null;
-}
 }

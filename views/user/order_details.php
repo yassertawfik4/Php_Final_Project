@@ -24,18 +24,18 @@ if (!isset($order) || !isset($items)) {
     $orderId = (int) ($_GET['id'] ?? 0);
     if ($orderId <= 0) {
         $_SESSION['errors'] = ['Invalid order.'];
-        header('Location: ' . BASE_URL . '/?page=user.orders');
+        header('Location: ' . BASE_URL . '/?page=orders');
         exit;
     }
     $order = $orderModel->findById($orderId);
     if (!$order) {
         $_SESSION['errors'] = ['Order not found.'];
-        header('Location: ' . BASE_URL . '/?page=user.orders');
+        header('Location: ' . BASE_URL . '/?page=orders');
         exit;
     }
     if ((int) $order['user_id'] !== $userId) {
         $_SESSION['errors'] = ['You can only view your own orders.'];
-        header('Location: ' . BASE_URL . '/?page=user.orders');
+        header('Location: ' . BASE_URL . '/?page=orders');
         exit;
     }
     $items = $orderItemModel->getByOrder($orderId);
@@ -91,7 +91,7 @@ function formatOrderDate($datetime) {
             <span>
                 <span class="badge bg-secondary"><?= htmlspecialchars(formatOrderStatus($order['status'] ?? '')) ?></span>
                 <?php if (($order['status'] ?? '') === 'processing'): ?>
-                    <form method="post" action="<?= BASE_URL ?>/controllers/OrderController.php" class="d-inline ms-2" onsubmit="return confirm('Cancel this order?');">
+                    <form method="post" action="<?= BASE_URL ?>/?page=order.cancel" class="d-inline ms-2" onsubmit="return confirm('Cancel this order?');">
                         <input type="hidden" name="action" value="cancel">
                         <input type="hidden" name="order_id" value="<?= (int) $order['id'] ?>">
                         <button type="submit" class="btn btn-sm btn-outline-danger">CANCEL ORDER</button>
@@ -146,7 +146,7 @@ function formatOrderDate($datetime) {
     </div>
 
     <div class="mt-3">
-        <a href="<?= BASE_URL ?>/?page=user.orders" class="btn btn-outline-secondary">
+        <a href="<?= BASE_URL ?>/?page=orders" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to My Orders
         </a>
     </div>

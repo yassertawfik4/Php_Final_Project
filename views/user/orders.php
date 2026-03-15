@@ -61,7 +61,11 @@ function formatOrderDate($datetime) {
     return $ts ? date('Y/m/d h:i A', $ts) : $datetime;
 }
 ?>
-<?php require_once BASE_PATH . '/includes/header.php'; ?>
+<?php 
+require_once BASE_PATH . '/includes/header.php'; 
+require_once BASE_PATH . '/includes/navbar.php';
+
+?>
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -89,7 +93,7 @@ function formatOrderDate($datetime) {
     <?php endif; ?>
 
     <form method="get" action="" class="row g-2 mb-4 align-items-end">
-        <input type="hidden" name="page" value="user.orders">
+        <input type="hidden" name="page" value="orders">
         <div class="col-auto">
             <label class="form-label small mb-0">Date from</label>
             <input type="date" name="date_from" class="form-control" value="<?= htmlspecialchars($dateFrom ?? '') ?>">
@@ -129,8 +133,9 @@ function formatOrderDate($datetime) {
                             <td><?= htmlspecialchars(formatOrderStatus($order['status'] ?? '')) ?></td>
                             <td><?= (float) ($order['total_price'] ?? 0) ?> EGP</td>
                             <td class="text-end">
+                                <a class="btn btn-sm btn-outline-secondary me-2" href="<?= BASE_URL ?>/?page=order.details&id=<?= (int)$order['id'] ?>">Details</a>
                                 <?php if (($order['status'] ?? '') === 'processing'): ?>
-                                    <form method="post" action="<?= BASE_URL ?>/controllers/OrderController.php" class="d-inline" onsubmit="return confirm('Cancel this order?');">
+                                    <form method="post" action="<?= BASE_URL ?>/?page=order.cancel" class="d-inline" onsubmit="return confirm('Cancel this order?');">
                                         <input type="hidden" name="action" value="cancel">
                                         <input type="hidden" name="order_id" value="<?= (int) $order['id'] ?>">
                                         <button type="submit" class="btn btn-link btn-sm text-danger p-0">CANCEL</button>
@@ -183,7 +188,7 @@ function formatOrderDate($datetime) {
                         $prevPage = ($page ?? 1) - 1;
                         $query = $_GET;
                         $query['p'] = $prevPage;
-                        $query['page'] = 'user.orders';
+                        $query['page'] = 'orders';
                         $href = '?' . http_build_query($query);
                         ?>
                         <a class="page-link" href="<?= $href ?>">&lt;</a>
@@ -196,7 +201,7 @@ function formatOrderDate($datetime) {
                         $nextPage = ($page ?? 1) + 1;
                         $query = $_GET;
                         $query['p'] = $nextPage;
-                        $query['page'] = 'user.orders';
+                        $query['page'] = 'orders';
                         $href = '?' . http_build_query($query);
                         ?>
                         <a class="page-link" href="<?= $href ?>">&gt;</a>
