@@ -18,7 +18,10 @@ if (!isset($users) || !isset($products)) {
 }
 $selectedUserId = (int) ($_POST['user_id'] ?? $_GET['user_id'] ?? (!empty($users) ? $users[0]['id'] : 0));
 ?>
-<?php require_once BASE_PATH . '/includes/header.php'; ?>
+<?php 
+require_once BASE_PATH . '/includes/header.php'; 
+require_once BASE_PATH . '/includes/navbar.php';
+?>
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -45,7 +48,7 @@ $selectedUserId = (int) ($_POST['user_id'] ?? $_GET['user_id'] ?? (!empty($users
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
 
-    <form id="manual-order-form" method="post" action="<?= BASE_URL ?>/controllers/OrderController.php">
+    <form id="manual-order-form" method="post" action="<?= BASE_URL ?>/?page=order.place">
         <input type="hidden" name="action" value="place">
         <input type="hidden" name="user_id" id="form-user-id" value="<?= $selectedUserId ?>">
 
@@ -97,7 +100,7 @@ $selectedUserId = (int) ($_POST['user_id'] ?? $_GET['user_id'] ?? (!empty($users
                                     <div class="card h-100 product-card cursor-pointer border shadow-sm" role="button" tabindex="0">
                                         <div class="card-body text-center py-3">
                                             <?php if (!empty($p['image'])): ?>
-                                                <img src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($p['image']) ?>" alt="" class="img-fluid rounded mb-1" style="max-height: 64px; object-fit: contain;">
+                                                <img src="<?= BASE_URL ?>/public/<?= htmlspecialchars($p['image']) ?>" alt="" class="img-fluid rounded mb-1" style="max-height: 64px; object-fit: contain;">
                                             <?php else: ?>
                                                 <i class="bi bi-cup-hot display-6 text-secondary"></i>
                                             <?php endif; ?>

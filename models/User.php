@@ -132,4 +132,12 @@ public function getAll($limit = 10, $offset = 0) {
     $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = ?");
     $stmt->execute([$id]);
 }
+
+    // Get distinct rooms for dropdowns
+    public function getDistinctRooms() {
+        $stmt = $this->pdo->query(
+            "SELECT DISTINCT room FROM users WHERE room IS NOT NULL AND room <> '' ORDER BY room"
+        );
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }
