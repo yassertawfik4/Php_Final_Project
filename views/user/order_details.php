@@ -126,7 +126,7 @@ function formatOrderDate($datetime) {
                     ?>
                         <li class="list-group-item d-flex align-items-center gap-3 py-3">
                             <?php if (!empty($item['product_image'])): ?>
-                                <img src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($item['product_image']) ?>" alt="" class="rounded" style="width: 48px; height: 48px; object-fit: cover;">
+                                <img src="<?= BASE_URL ?>/public/<?= htmlspecialchars($item['product_image']) ?>" alt="" class="rounded" style="width: 48px; height: 48px; object-fit: cover;">
                             <?php else: ?>
                                 <i class="bi bi-cup-hot text-secondary fs-2"></i>
                             <?php endif; ?>
