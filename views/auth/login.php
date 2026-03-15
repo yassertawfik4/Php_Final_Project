@@ -276,7 +276,7 @@ require_once BASE_PATH . '/includes/header.php';
             </form>
 
             <div class="login-footer-links">
-                <a href="<?= BASE_URL . '/?page=forget_password' ?>">Forgot Password?</a>
+                <a href="<?= BASE_URL . '/?page=forgot' ?>">Forgot Password?</a>
             </div>
         </div>
     </div>

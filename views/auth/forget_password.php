@@ -1,3 +1,14 @@
+<?php
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(__DIR__, 2));
+}
+if (!defined('BASE_URL')) {
+    define('BASE_URL', '/Php_Final_Project');
+}
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -242,7 +253,24 @@
         <h3>Forgot Your Password?</h3>
         <p class="reset-subtitle">Enter your email to find your account</p>
 
-        <form action="reset_password.php" method="POST">
+        <?php if (!empty($_SESSION['errors'])): ?>
+            <div class="error-alert">
+                <ul class="mb-0">
+                    <?php foreach ($_SESSION['errors'] as $err): ?>
+                        <li><?= htmlspecialchars($err) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php unset($_SESSION['errors']); ?>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['success'])): ?>
+            <div class="alert alert-success">
+                <?= htmlspecialchars($_SESSION['success']) ?>
+            </div>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+
+        <form action="<?= BASE_URL ?>/?page=reset_password" method="POST">
             <div class="form-group-reset">
                 <label for="email">Email Address</label>
                 <input 
@@ -285,7 +313,7 @@
         </form>
 
         <div class="reset-footer-links">
-            <p>Remember your password? <a href="login.php">Sign in here</a></p>
+            <p>Remember your password? <a href="<?= BASE_URL ?>/?page=login">Sign in here</a></p>
         </div>
     </div>
 </div>
