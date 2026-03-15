@@ -27,7 +27,7 @@ $isActive = static function (array $pages) use ($currentPage): string {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" aria-disabled="true">
+                        <a class="nav-link " href="<?= BASE_URL ?>/?page=admin.products">
                             Products
                         </a>
                     </li>
@@ -37,7 +37,7 @@ $isActive = static function (array $pages) use ($currentPage): string {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="#" aria-disabled="true">
+                        <a class="nav-link " href="<?= BASE_URL ?>/?page=admin.manual_order">
                         Manual Orders
                         </a>
                     </li>
