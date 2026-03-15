@@ -158,7 +158,7 @@ require_once BASE_PATH . '/includes/navbar.php';
                                                 <?php $sub = ($item['price'] ?? 0) * ($item['quantity'] ?? 0); $orderTotal += $sub; ?>
                                                 <div class="col-12 col-md-6 d-flex align-items-center gap-2">
                                                     <?php if (!empty($item['product_image'])): ?>
-                                                        <img src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($item['product_image']) ?>" alt="" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                                                        <img src="<?= BASE_URL ?>/public/<?= htmlspecialchars($item['product_image']) ?>" alt="" class="rounded" style="width: 40px; height: 40px; object-fit: cover;">
                                                     <?php else: ?>
                                                         <i class="bi bi-cup-hot text-secondary fs-4"></i>
                                                     <?php endif; ?>

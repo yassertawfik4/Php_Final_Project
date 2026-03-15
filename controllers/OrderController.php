@@ -71,6 +71,10 @@ class OrderController
 
             $product = $this->productModel->findById($productId);
             if (!$product) continue;
+            $isAvailable = (int)($product['is_available'] ?? $product['available'] ?? 1);
+            if ($isAvailable !== 1) {
+                continue;
+            }
 
             $total += $product['price'] * $qty;
             $validItems[] = [
