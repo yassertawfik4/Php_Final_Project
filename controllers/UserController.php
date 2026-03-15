@@ -47,9 +47,13 @@ class UserController
         }
         if ($data['email'] === '') {
             $errors[] = 'Email is required.';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Please enter a valid email address.';
         }
         if ($data['password'] === '') {
             $errors[] = 'Password is required.';
+        } elseif (strlen($data['password']) < 6) {
+            $errors[] = 'Password must be at least 6 characters.';
         }
 
         if (!empty($_FILES['image']) ) {
@@ -125,6 +129,8 @@ class UserController
         }
         if ($data['email'] === '') {
             $errors[] = 'Email is required.';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Please enter a valid email address.';
         }
 
         if (!empty($_FILES['image']['name'])) {
