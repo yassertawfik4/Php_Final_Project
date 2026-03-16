@@ -32,7 +32,8 @@ class OrderController
         }
 
         // Determine user ID (admin can place orders for users)
-        if ($_SESSION['role'] === 'admin' && !empty($_POST['user_id'])) {
+        $sessionRole = $_SESSION['user_role'] ?? '';
+        if ($sessionRole === 'admin' && !empty($_POST['user_id'])) {
             require_role('admin');
             $userId = (int)$_POST['user_id'];
         } else {
@@ -54,7 +55,7 @@ class OrderController
 
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
-            $redirect = ($_SESSION['role'] === 'admin')
+            $redirect = ($sessionRole === 'admin')
                 ? '/?page=admin.manual_order'
                 : '/?page=home';
             header('Location: ' . BASE_URL . $redirect);
@@ -86,7 +87,7 @@ class OrderController
 
         if (empty($validItems)) {
             $_SESSION['errors'] = ['No valid items found. Please try again.'];
-            $redirect = ($_SESSION['role'] === 'admin')
+            $redirect = ($sessionRole === 'admin')
                 ? '/?page=admin.manual_order'
                 : '/?page=home';
             header('Location: ' . BASE_URL . $redirect);
@@ -105,7 +106,7 @@ class OrderController
 
         $_SESSION['success'] = 'Order placed successfully!';
 
-        $redirect = ($_SESSION['role'] === 'admin')
+        $redirect = ($sessionRole === 'admin')
             ? '/?page=admin.manual_order'
             : '/?page=home';
         header('Location: ' . BASE_URL . $redirect);
