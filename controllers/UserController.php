@@ -25,6 +25,9 @@ class UserController
     {
         require_once BASE_PATH . '/includes/auth_check.php';
         require_role('admin');
+        $errors = [];
+        $old = [];
+        $rooms = $this->userModel->getDistinctRooms();
         require_once BASE_PATH . '/views/admin/users/add.php';
     }
     public function add()
@@ -36,6 +39,7 @@ class UserController
             'name' => trim($_POST['name'] ?? ''),
             'email' => trim($_POST['email'] ?? ''),
             'password' => (string)($_POST['password'] ?? ''),
+            'password_confirm' => (string)($_POST['password_confirm'] ?? ''),
             'room' => trim($_POST['room'] ?? ''),
             'ext' => trim($_POST['ext'] ?? ''),
             'image' => null,
@@ -49,14 +53,30 @@ class UserController
             $errors[] = 'Email is required.';
         } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Please enter a valid email address.';
+        } elseif ($this->userModel->emailExists($data['email'])) {
+            $errors[] = 'This email is already registered.';
         }
         if ($data['password'] === '') {
             $errors[] = 'Password is required.';
         } elseif (strlen($data['password']) < 6) {
             $errors[] = 'Password must be at least 6 characters.';
         }
+        if ($data['password_confirm'] === '') {
+            $errors[] = 'Password confirmation is required.';
+        } elseif ($data['password'] !== $data['password_confirm']) {
+            $errors[] = 'Passwords do not match.';
+        }
 
-        if (!empty($_FILES['image']) ) {
+        if ($data['role'] === 'user') {
+            if ($data['room'] === '') {
+                $errors[] = 'Room is required for users.';
+            }
+        } else {
+            $data['room'] = null;
+            $data['ext'] = null;
+        }
+
+        if (!empty($_FILES['image']['name'])) {
             
                 $uploadDir = BASE_PATH . '/public/uploads';
                 $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
@@ -74,11 +94,23 @@ class UserController
         }
 
         if ($errors) {
+            $rooms = $this->userModel->getDistinctRooms();
+            $old = $data;
+            unset($old['password'], $old['password_confirm']);
             require_once BASE_PATH . '/views/admin/users/add.php';
             return;
         }
 
-        $this->userModel->create($data);
+        try {
+            $this->userModel->create($data);
+        } catch (\PDOException $e) {
+            $errors[] = 'Could not create user. Please try again.';
+            $rooms = $this->userModel->getDistinctRooms();
+            $old = $data;
+            unset($old['password'], $old['password_confirm']);
+            require_once BASE_PATH . '/views/admin/users/add.php';
+            return;
+        }
         header('Location: ' . BASE_URL . '/?page=admin.users');
         exit;
 
@@ -99,6 +131,7 @@ class UserController
         if (!$user) {
             die("User not found!");
         }
+        $rooms = $this->userModel->getDistinctRooms();
 
         require_once BASE_PATH . '/views/admin/users/edit.php';
     }
@@ -114,6 +147,12 @@ class UserController
             exit;
         }
 
+        $existingUser = $this->userModel->findById($id);
+        if (!$existingUser) {
+            header('Location: ' . BASE_URL . '/?page=admin.users');
+            exit;
+        }
+
         $data = [
             'name' => trim($_POST['name'] ?? ''),
             'email' => trim($_POST['email'] ?? ''),
@@ -122,6 +161,8 @@ class UserController
             'ext' => trim($_POST['ext'] ?? ''),
             'image' => null,
         ];
+        $passwordConfirm = (string)($_POST['password_confirm'] ?? '');
+        $role = $existingUser['role'] ?? 'user';
 
         $errors = [];
         if ($data['name'] === '') {
@@ -131,12 +172,20 @@ class UserController
             $errors[] = 'Email is required.';
         } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Please enter a valid email address.';
+        } elseif ($this->userModel->emailExists($data['email'], $id)) {
+            $errors[] = 'This email is already registered.';
         }
-        $oldImg= $this->userModel->findById($id)['image'];
+        if ($role === 'user' && $data['room'] === '') {
+            $errors[] = 'Room is required for users.';
+        }
+        if ($role !== 'user') {
+            $data['room'] = null;
+            $data['ext'] = null;
+        }
+        $oldImg= $existingUser['image'];
 
+        $uploadDir = BASE_PATH . '/public/uploads/';
         if (!empty($_FILES['image']['name'])) {
-    
-            $uploadDir = BASE_PATH . '/public/uploads/';
             
             $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             $fileName = $data['name'] . '_' . time() . '.' . strtolower($ext);
@@ -148,18 +197,35 @@ class UserController
             } else {
                 $errors[] = 'Failed to upload image.';
             }
-            unlink($uploadDir . $oldImg);
         } else {
             unset($data['image']); 
         }
 
+        if ($data['password'] !== '') {
+            if (strlen($data['password']) < 6) {
+                $errors[] = 'Password must be at least 6 characters.';
+            }
+            if ($data['password'] !== $passwordConfirm) {
+                $errors[] = 'Passwords do not match.';
+            }
+        }
+
         if ($errors) {
-            $user = $this->userModel->findById($id);
+            $user = array_merge($existingUser, [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'room' => $data['room'],
+                'ext' => $data['ext'],
+            ]);
+            $rooms = $this->userModel->getDistinctRooms();
             require_once BASE_PATH . '/views/admin/users/edit.php';
             return;
         }
 
         $this->userModel->update($id, $data);
+        if (!empty($data['image']) && $oldImg && file_exists($uploadDir . $oldImg)) {
+            unlink($uploadDir . $oldImg);
+        }
         header('Location: ' . BASE_URL . '/?page=admin.users');
         exit;
     }
@@ -175,9 +241,18 @@ class UserController
             exit;
         }
 
-            $imagePath = BASE_PATH . '/public/uploads/' . $this->userModel->findById($id)['image'];
+            $user = $this->userModel->findById($id);
+            if (!$user) {
+                header('Location: ' . BASE_URL . '/?page=admin.users');
+                exit;
+            }
+
+            $imagePath = !empty($user['image'])
+                ? BASE_PATH . '/public/uploads/' . $user['image']
+                : null;
+
             $this->userModel->delete($id);
-            if (file_exists($imagePath)) {
+            if ($imagePath && file_exists($imagePath)) {
                 unlink($imagePath);
             }
         header('Location: ' . BASE_URL . '/?page=admin.users');
