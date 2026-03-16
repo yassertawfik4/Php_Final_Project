@@ -37,7 +37,7 @@ if ($checksData) {
                 foreach ($itemsByOrder[$order['id']] as $item) {
                     $items[] = [
                         'name' => $item['product_name'],
-                        'emoji' => $item['product_image'] ?? '☕',
+                        'emoji' => $item['product_image'],
                         'qty' => (int)$item['quantity'],
                         'price' => (float)$item['price'],
                     ];
@@ -190,7 +190,7 @@ if ($checksData) {
     color: #0f5ea8;
 }
 
-.user-avatar {
+.prod-avatar {
     width: 36px;
     height: 36px;
     border-radius: 8px;
@@ -493,7 +493,7 @@ if ($checksData) {
                             <td><i class="bi bi-chevron-right expand-icon"></i></td>
                             <td>
                                 <div class="user-name-cell">
-                                    <div class="user-avatar"><?php echo htmlspecialchars($check["initials"]); ?>
+                                    <div class="prod-avatar"><?php echo htmlspecialchars($check["initials"]); ?>
                                     </div>
                                     <?php echo htmlspecialchars($check["name"]); ?>
                                 </div>

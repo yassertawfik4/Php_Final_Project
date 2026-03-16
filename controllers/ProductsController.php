@@ -159,9 +159,9 @@ class ProductController {
         $target = __DIR__ . '/../public/' . $folder;
         if (!is_dir($target)) mkdir($target, 0755, true);
         $ext      = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed  = ['jpg', 'jpeg', 'png', 'webp'];
+        $allowed  = ['jpg', 'jpeg', 'png', 'webp','jfif'];
         if (!in_array($ext, $allowed, true)) {
-            setFlash('error', 'Invalid image type. Allowed: jpg, png, webp.');
+            setFlash('error', 'Invalid image type. Allowed: jpg, png, webp, jfif.');
             return null;
         }
         $filename = uniqid() . '.' . $ext;

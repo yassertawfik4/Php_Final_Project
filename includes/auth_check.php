@@ -14,7 +14,6 @@ function require_role(string $required_role): void
     }
 }
 
-// ── حفظ الـ flash message في الـ session ──
 if (!function_exists('setFlash')) {
     function setFlash($type, $message) {
         $_SESSION['flash'] = [
@@ -24,7 +23,6 @@ if (!function_exists('setFlash')) {
     }
 }
 
-// ── جيب الـ flash وامسحه عشان يظهر مرة واحدة بس ──
 if (!function_exists('getFlash')) {
     function getFlash() {
         if (isset($_SESSION['flash'])) {

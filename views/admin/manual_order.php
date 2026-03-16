@@ -23,10 +23,9 @@ require_once BASE_PATH . '/includes/header.php';
 require_once BASE_PATH . '/includes/navbar.php';
 ?>
 
-<div class="container-fluid py-4">
+<div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Manual Order</h2>
-        <span class="text-muted"><i class="bi bi-person-circle"></i> admin</span>
     </div>
 
     <?php if (!empty($_SESSION['errors'])): ?>
@@ -62,7 +61,7 @@ require_once BASE_PATH . '/includes/navbar.php';
                     <div class="card-body">
                         <div id="cart-items" class="mb-3">
                             <!-- Filled by JS -->
-                            <p class="text-muted small" id="cart-empty-msg">No items yet. Select a user and add products from the right.</p>
+                            <p class="text-muted small" id="cart-empty-msg">No items yet</p>
                         </div>
 
                         <label class="form-label" for="notes">Notes</label>

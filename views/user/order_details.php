@@ -58,12 +58,14 @@ function formatOrderDate($datetime) {
     return $ts ? date('Y/m/d h:i A', $ts) : $datetime;
 }
 ?>
-<?php require_once BASE_PATH . '/includes/header.php'; ?>
+<?php 
+require_once BASE_PATH . '/includes/header.php'; 
+require_once BASE_PATH . '/includes/navbar.php';
+?>
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Order #<?= (int) $order['id'] ?></h2>
-        <span class="text-muted"><i class="bi bi-person-circle"></i> <?= htmlspecialchars($userName) ?></span>
     </div>
 
     <?php if (!empty($_SESSION['errors'])): ?>

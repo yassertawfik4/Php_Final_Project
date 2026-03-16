@@ -5,169 +5,150 @@
 
 <style>
     .add-user-container {
-        background: linear-gradient(135deg, rgba(15, 94, 168, 0.05) 0%, rgba(231, 165, 53, 0.05) 100%);
+        background: #f9f9f9;
         min-height: calc(100vh - 56px);
-        padding: 40px 20px;
+        padding: 32px 16px;
     }
 
     .form-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(15, 26, 45, 0.08);
-        border: 1px solid #dbe4ee;
-        max-width: 800px;
+        background: #fff;
+        border: 1px solid #d9d9d9;
+        border-radius: 8px;
+        max-width: 720px;
         margin: 0 auto;
         overflow: hidden;
     }
 
     .form-header {
-        background: linear-gradient(135deg, #0f5ea8 0%, #0a4681 100%);
-        padding: 50px 40px;
-        color: white;
+        padding: 24px;
+        border-bottom: 1px solid #e4e4e4;
     }
 
     .form-header h1 {
-        font-size: 2rem;
-        font-weight: 800;
-        margin: 0 0 10px 0;
-        color: white;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0;
+        color: #2d2d2d;
     }
 
     .form-header p {
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.9);
-        margin: 0;
+        margin: 6px 0 0 0;
+        color: #606060;
+        font-size: 0.95rem;
     }
 
     .form-body {
-        padding: 40px;
+        padding: 24px;
     }
 
     .error-alert {
-        background: #fef3f2;
-        border: 2px solid #f6d0d4;
-        color: #b42318;
-        padding: 16px 20px;
-        border-radius: 12px;
-        margin-bottom: 24px;
+        background: #fff4f2;
+        border: 1px solid #f0c7c3;
+        color: #9e1c13;
+        padding: 12px 14px;
+        border-radius: 6px;
+        margin-bottom: 20px;
     }
 
     .error-alert ul {
         margin: 0;
-        padding-left: 20px;
+        padding-left: 18px;
     }
 
     .error-alert li {
-        margin-bottom: 6px;
+        margin-bottom: 4px;
     }
 
     .form-section {
-        margin-bottom: 32px;
+        margin-bottom: 20px;
     }
 
     .form-section-title {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #344054;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #f0f0f0;
+        color: #2f2f2f;
+        margin-bottom: 12px;
     }
 
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
     }
 
     .form-group {
         display: flex;
         flex-direction: column;
+        gap: 6px;
     }
 
     .form-group label {
-        font-weight: 700;
-        font-size: 0.9rem;
-        color: #344054;
-        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #333;
     }
 
     .form-group input,
     .form-group select {
-        padding: 12px 16px;
-        border: 2px solid #dbe4ee;
-        border-radius: 12px;
+        padding: 10px 12px;
+        border: 1px solid #cfcfcf;
+        border-radius: 4px;
         font-size: 0.95rem;
         font-family: inherit;
-        transition: all 0.3s ease;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .form-group input:focus,
     .form-group select:focus {
         outline: none;
-        border-color: #0f5ea8;
-        box-shadow: 0 0 0 4px rgba(15, 94, 168, 0.1);
-        background: #f9fbff;
-    }
-
-    .form-group input::placeholder {
-        color: #a1afc9;
+        border-color: #1f4b7a;
+        box-shadow: 0 0 0 2px rgba(31, 75, 122, 0.12);
     }
 
     .form-actions {
         display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-        padding-top: 24px;
-        border-top: 1px solid #f0f0f0;
+        gap: 10px;
+        justify-content: flex-start;
+        padding-top: 12px;
+        border-top: 1px solid #e4e4e4;
+        margin-top: 8px;
+    }
+
+    .btn-submit,
+    .btn-reset,
+    .btn-cancel {
+        padding: 10px 18px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: 1px solid #cfcfcf;
+        background: #f7f7f7;
+        color: #2d2d2d;
+        text-decoration: none;
+        transition: background 0.15s ease, border-color 0.15s ease;
     }
 
     .btn-submit {
-        padding: 12px 28px;
-        background: linear-gradient(135deg, #0f5ea8 0%, #0a4681 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.95rem;
+        background: #1f4b7a;
+        border-color: #1f4b7a;
+        color: #fff;
     }
 
     .btn-submit:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(15, 94, 168, 0.25);
+        background: #193f66;
+        border-color: #193f66;
     }
 
-    .btn-cancel {
-        padding: 12px 28px;
-        background: #f0f0f0;
-        color: #344054;
-        border: none;
-        border-radius: 12px;
-        font-weight: 700;
-        cursor: pointer;
-        text-decoration: none;
-        font-size: 0.95rem;
-        transition: all 0.3s ease;
-        display: inline-block;
-    }
-
+    .btn-reset:hover,
     .btn-cancel:hover {
-        background: #dbe4ee;
-        color: #344054;
+        background: #ededed;
+        border-color: #bdbdbd;
     }
 
-    @media (max-width: 768px) {
-        .form-header {
-            padding: 40px 30px;
-        }
-
+    @media (max-width: 600px) {
         .form-body {
-            padding: 30px;
+            padding: 20px;
         }
 
         .form-row {
@@ -175,13 +156,8 @@
         }
 
         .form-actions {
-            flex-direction: column-reverse;
-        }
-
-        .btn-submit,
-        .btn-cancel {
-            width: 100%;
-            text-align: center;
+            flex-direction: column;
+            align-items: stretch;
         }
     }
 </style>
@@ -189,8 +165,8 @@
 <div class="add-user-container">
     <div class="form-card">
         <div class="form-header">
-            <h1>Add New User</h1>
-            <p>Create a new user account in the cafeteria system</p>
+            <h1>Add User</h1>
+            <p>Enter user details</p>
         </div>
 
         <div class="form-body">
@@ -205,70 +181,66 @@
             <?php endif; ?>
 
             <form method="post" action="<?= BASE_URL ?>/?page=admin.create_user" enctype="multipart/form-data">
-                <!-- Personal Information Section -->
                 <div class="form-section">
-                    <div class="form-section-title">Personal Information</div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="name">Full Name *</label>
-                            <input type="text" id="name" name="name" placeholder="Enter user full name" value="<?= htmlspecialchars($old['name'] ?? '') ?>" required>
+                            <label for="name">Name *</label>
+                            <input type="text" id="name" name="name" placeholder="Name" value="<?= htmlspecialchars($old['name'] ?? '') ?>" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input type="email" id="email" name="email" placeholder="Enter user email" value="<?= htmlspecialchars($old['email'] ?? '') ?>" required>
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" placeholder="Email" value="<?= htmlspecialchars($old['email'] ?? '') ?>" required>
                         </div>
                     </div>
                 </div>
 
-                <!-- Room Information Section -->
                 <div class="form-section">
-                    <div class="form-section-title">Room Information</div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="room">Room Number</label>
-                            <input type="text" id="room" name="room" placeholder="e.g., 101, A-305" value="<?= htmlspecialchars($old['room'] ?? '') ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="ext">Extension</label>
-                            <input type="text" id="ext" name="ext" placeholder="e.g., 2345" value="<?= htmlspecialchars($old['ext'] ?? '') ?>">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security Section -->
-                <div class="form-section">
-                    <div class="form-section-title">Security</div>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="password">Password *</label>
-                            <input type="password" id="password" name="password" placeholder="Enter a secure password" required>
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirm">Confirm Password *</label>
+                            <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirm Password">
                         </div>
                     </div>
                 </div>
 
-                <!-- Additional Information Section -->
                 <div class="form-section">
-                    <div class="form-section-title">Additional Information</div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="image">Profile Picture</label>
+                            <label for="room">Room No.</label>
+                            <input type="text" id="room" name="room" placeholder="Room No." value="<?= htmlspecialchars($old['room'] ?? '') ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="ext">Ext.</label>
+                            <input type="text" id="ext" name="ext" placeholder="Ext." value="<?= htmlspecialchars($old['ext'] ?? '') ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="image">Profile picture</label>
                             <input type="file" id="image" name="image" accept="image/*">
                         </div>
                         <div class="form-group">
-                            <label for="role">User Role *</label>
+                            <label for="role">Role *</label>
                             <select id="role" name="role" required>
                                 <?php $roleValue = $old['role'] ?? 'user'; ?>
-                                <option value="user" <?= $roleValue === 'user' ? 'selected' : '' ?>>Regular User</option>
-                                <option value="admin" <?= $roleValue === 'admin' ? 'selected' : '' ?>>Administrator</option>
+                                <option value="user" <?= $roleValue === 'user' ? 'selected' : '' ?>>User</option>
+                                <option value="admin" <?= $roleValue === 'admin' ? 'selected' : '' ?>>Admin</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Form Actions -->
                 <div class="form-actions">
-                    <button type="submit" class="btn-submit">Create User</button>
-                    <a class="btn-cancel" href="<?= BASE_URL ?>/?page=admin.users">Cancel</a>
+                    <button type="submit" class="btn-submit">Save</button>
+                    <button type="reset" class="btn-reset">Reset</button>
+                    <a class="btn-cancel" href="<?= BASE_URL ?>/?page=admin.users">Back</a>
                 </div>
             </form>
         </div>

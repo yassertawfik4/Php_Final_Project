@@ -132,6 +132,7 @@ class UserController
         } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Please enter a valid email address.';
         }
+        $oldImg= $this->userModel->findById($id)['image'];
 
         if (!empty($_FILES['image']['name'])) {
     
@@ -147,6 +148,7 @@ class UserController
             } else {
                 $errors[] = 'Failed to upload image.';
             }
+            unlink($uploadDir . $oldImg);
         } else {
             unset($data['image']); 
         }

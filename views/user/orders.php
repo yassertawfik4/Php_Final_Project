@@ -70,7 +70,6 @@ require_once BASE_PATH . '/includes/navbar.php';
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">My Orders</h2>
-        <span class="text-muted"><i class="bi bi-person-circle"></i> <?= htmlspecialchars($userName) ?></span>
     </div>
 
     <?php if (!empty($_SESSION['errors'])): ?>

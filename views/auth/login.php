@@ -222,9 +222,8 @@ require_once BASE_PATH . '/includes/header.php';
     <div class="login-wrapper">
         <!-- Brand Section -->
         <div class="login-brand-section">
-            <div class="brand-icon"></div>
             <h2>Cafeteria</h2>
-            <p>Welcome to your favorite campus food hub. Quality meals, fast service, and great taste in every order.</p>
+            <p>Welcome</p>
         </div>
 
         <!-- Login Form Section -->
@@ -245,7 +244,7 @@ require_once BASE_PATH . '/includes/header.php';
             <?php endif; ?>
 
             <h3>Welcome Back</h3>
-            <p class="login-subtitle">Sign in to your account to continue</p>
+            <p class="login-subtitle">Sign in to your account</p>
 
             <form action="<?= BASE_URL . '/?page=login' ?>" method="POST">
                 <div class="form-group-login">

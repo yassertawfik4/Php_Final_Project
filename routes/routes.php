@@ -41,7 +41,6 @@ switch ($page){
         require_once BASE_PATH . '/views/user/order_details.php';
         break;
 
-    // Backward-compatible alias
     case 'user.orders':
         header('Location: ' . BASE_URL . '/?page=orders');
         exit;

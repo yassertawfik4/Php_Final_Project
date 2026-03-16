@@ -47,11 +47,7 @@ h6 {
   color: #101828;
 }
 
-p,
-small,
-.text-muted {
-  color: var(--muted) !important;
-}
+
 
 .app-navbar {
   background: linear-gradient(90deg, #0f5ea8, #0c4f90);

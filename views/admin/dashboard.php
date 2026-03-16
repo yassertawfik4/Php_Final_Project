@@ -23,12 +23,11 @@ unset($_SESSION['dashboard_success'], $_SESSION['dashboard_error']);
     }
 
     .admin-header {
-        background: linear-gradient(135deg, #0f5ea8 0%, #0a4681 100%);
+        background:  #0f5ea8;
         border-radius: 20px;
         padding: 50px 40px;
         color: white;
         margin-bottom: 40px;
-        box-shadow: 0 20px 60px rgba(15, 94, 168, 0.15);
     }
 
     .admin-header h1 {
@@ -55,14 +54,8 @@ unset($_SESSION['dashboard_success'], $_SESSION['dashboard_error']);
         background: white;
         border-radius: 16px;
         padding: 30px;
-        box-shadow: 0 10px 30px rgba(15, 26, 45, 0.08);
         border: 1px solid #dbe4ee;
         transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-        box-shadow: 0 15px 40px rgba(15, 26, 45, 0.12);
-        transform: translateY(-4px);
     }
 
     .stat-icon {
@@ -273,46 +266,12 @@ unset($_SESSION['dashboard_success'], $_SESSION['dashboard_error']);
         font-size: 3.5rem;
         margin-bottom: 16px;
     }
-
-    @media (max-width: 768px) {
-        .admin-header {
-            padding: 40px 30px;
-        }
-
-        .admin-header h1 {
-            font-size: 1.8rem;
-        }
-
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .order-card-header {
-            flex-direction: column;
-        }
-
-        .order-footer {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .order-actions {
-            width: 100%;
-            margin-top: 16px;
-        }
-
-        .btn-action {
-            flex: 1;
-            justify-content: center;
-        }
-    }
 </style>
 
 <div class="admin-container">
     <div class="container">
         <div class="admin-header">
             <h1>Dashboard</h1>
-            <p>Monitor current orders and track daily performance</p>
         </div>
 
         <?php if ($successMessage): ?>
@@ -355,9 +314,8 @@ unset($_SESSION['dashboard_success'], $_SESSION['dashboard_error']);
         <div class="orders-section-header">
             <div>
                 <h2>Current Orders</h2>
-                <span class="section-meta">Real-time order tracking</span>
             </div>
-            <div class="section-meta">📅 <?= date('M d, Y') ?></div>
+    
         </div>
 
         <?php if (empty($orders)): ?>

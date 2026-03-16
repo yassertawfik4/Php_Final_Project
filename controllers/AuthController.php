@@ -28,7 +28,7 @@ class AuthController
             $_SESSION['user_role'] = $user['role'];
             $_SESSION['user_image'] = $user['image'] ?? null;
             if ($user['role'] === 'admin') {
-                header('Location: ' . BASE_URL . '/?page=admin.users');
+                header('Location: ' . BASE_URL . '/?page=admin.dashboard');
             } else {
                 header('Location: ' . BASE_URL . '/?page=home');
             }
@@ -39,7 +39,6 @@ class AuthController
         header('Location: ' . BASE_URL . '/?page=login');
         exit;
     }
-
 
     
     public function logout(): void

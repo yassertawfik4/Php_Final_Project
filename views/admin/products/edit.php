@@ -58,7 +58,7 @@ require_once BASE_PATH . '/includes/navbar.php';
 				<input type="file" name="image" accept="image/*" class="form-control">
 				<?php if (!empty($product['image'])): ?>
 					<div class="mt-2">
-						<img src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($product['image']) ?>" alt="" style="width: 80px; height: 80px; object-fit: cover;" class="rounded">
+						<img src="<?= BASE_URL ?>/public/<?= htmlspecialchars($product['image']) ?>" alt="" style="width: 80px; height: 80px; object-fit: cover;" class="rounded">
 					</div>
 				<?php endif; ?>
 			</div>

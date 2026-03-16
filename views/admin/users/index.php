@@ -6,11 +6,10 @@
 <style>
 .users-topbar {
     margin-top: 150px;
-    background: linear-gradient(120deg, #0f5ea8, #0a4681);
+    background: #0f5ea8;
     border-radius: 16px;
     padding: 18px 20px;
     color: #fff;
-    box-shadow: 0 12px 26px rgba(15, 94, 168, 0.2);
 }
 
 .users-topbar h2,
@@ -51,10 +50,10 @@
         <div class="users-topbar d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
             <div>
                 <h2 class="mb-1">Users</h2>
-                <p class="mb-0">Manage cafeteria users, rooms, and account details.</p>
+                <p class="mb-0">Manage cafeteria users.</p>
             </div>
             <div class="d-flex align-items-center gap-2">
-                <span class="users-chip"><?= count($users ?? []) ?> Users</span>
+                <span class=""><?= count($users ?? []) ?> Users</span>
                 <a class="btn btn-light fw-bold" href="<?= BASE_URL ?>/?page=admin.add_user">
                     <i class="bi bi-person-plus-fill me-1"></i> Add User
                 </a>
