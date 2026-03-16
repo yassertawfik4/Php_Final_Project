@@ -1,6 +1,7 @@
 <?php
 	require_once BASE_PATH . '/includes/header.php';
 	require_once BASE_PATH . '/includes/navbar.php';
+    $rooms = $rooms ?? [];
 ?>
 
 <style>
@@ -219,7 +220,15 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="room">Room No.</label>
-                            <input type="text" id="room" name="room" placeholder="Room No." value="<?= htmlspecialchars($user['room'] ?? '') ?>">
+                            <select id="room" name="room" required>
+                                <option value="">Select room</option>
+                                <?php foreach ($rooms as $roomOption): ?>
+                                    <?php $roomVal = is_array($roomOption) ? ($roomOption['room'] ?? '') : $roomOption; ?>
+                                    <option value="<?= htmlspecialchars($roomVal) ?>" <?= ($user['room'] ?? '') === $roomVal ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($roomVal) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="ext">Ext.</label>

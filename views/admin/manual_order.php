@@ -13,10 +13,15 @@ if (!isset($users) || !isset($products)) {
     require_once BASE_PATH . '/models/User.php';
     require_once BASE_PATH . '/models/Product.php';
     $pdo = getDB();
-    $users = (new User($pdo))->getDropdownList();
+    $userModel = new User($pdo);
+    $users = $userModel->getDropdownList();
     $products = (new Product($pdo))->getAllAvailable();
 }
+$userModel = $userModel ?? new User(getDB());
 $selectedUserId = (int) ($_POST['user_id'] ?? $_GET['user_id'] ?? (!empty($users) ? $users[0]['id'] : 0));
+$selectedUser = $selectedUserId ? $userModel->findById($selectedUserId) : null;
+$rooms = $userModel->getDistinctRooms();
+$defaultRoom = $_POST['room'] ?? $_GET['room'] ?? ($selectedUser['room'] ?? '');
 ?>
 <?php 
 require_once BASE_PATH . '/includes/header.php'; 
@@ -68,7 +73,12 @@ require_once BASE_PATH . '/includes/navbar.php';
                         <textarea name="notes" id="notes" class="form-control mb-3" rows="2" placeholder="e.g. 1 Tea Extra Sugar"><?= htmlspecialchars($_POST['notes'] ?? '') ?></textarea>
 
                         <label class="form-label" for="room">Room</label>
-                        <input type="text" name="room" id="room" class="form-control mb-3" placeholder="Room" value="<?= htmlspecialchars($_POST['room'] ?? '') ?>" required>
+                        <select name="room" id="room" class="form-select mb-3" required>
+                            <option value="">Select room</option>
+                            <?php foreach ($rooms as $room): ?>
+                                <option value="<?= htmlspecialchars($room) ?>" <?= $defaultRoom === $room ? 'selected' : '' ?>><?= htmlspecialchars($room) ?></option>
+                            <?php endforeach; ?>
+                        </select>
 
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <strong>Total</strong>
@@ -85,7 +95,7 @@ require_once BASE_PATH . '/includes/navbar.php';
                     <label class="form-label fw-semibold">Add to user</label>
                     <select class="form-select" id="user-select" style="max-width: 280px;">
                         <?php foreach ($users as $u): ?>
-                            <option value="<?= (int) $u['id'] ?>" <?= $selectedUserId === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['name']) ?></option>
+                            <option value="<?= (int) $u['id'] ?>" data-room="<?= htmlspecialchars($u['room'] ?? '') ?>" <?= $selectedUserId === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['name']) ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -130,13 +140,18 @@ require_once BASE_PATH . '/includes/navbar.php';
     const orderTotalEl = document.getElementById('order-total');
     const btnConfirm = document.getElementById('btn-confirm');
     const formItemsContainer = document.getElementById('form-items-container');
-    const roomInput = document.getElementById('room');
+    const roomSelect = document.getElementById('room');
     const notesInput = document.getElementById('notes');
 
     let cart = {}; // { productId: { name, price, qty } }
 
     userDropdown.addEventListener('change', function () {
         userSelect.value = this.value;
+        const selectedOption = this.options[this.selectedIndex];
+        const optionRoom = selectedOption ? selectedOption.dataset.room || '' : '';
+        if (roomSelect) {
+            roomSelect.value = optionRoom;
+        }
     });
 
     function renderCart() {
@@ -246,6 +261,11 @@ require_once BASE_PATH . '/includes/navbar.php';
         });
         if (Object.keys(cart).length === 0) {
             e.preventDefault();
+            return;
+        }
+        if (!roomSelect.value) {
+            e.preventDefault();
+            roomSelect.focus();
             return;
         }
     });

@@ -17,6 +17,18 @@ class User {
         return $stmt->fetch();
     }
 
+    // Check if an email exists, optionally excluding a specific user id
+    public function emailExists(string $email, ?int $excludeId = null): bool {
+        if ($excludeId) {
+            $stmt = $this->pdo->prepare("SELECT 1 FROM users WHERE email = ? AND id <> ? LIMIT 1");
+            $stmt->execute([$email, $excludeId]);
+        } else {
+            $stmt = $this->pdo->prepare("SELECT 1 FROM users WHERE email = ? LIMIT 1");
+            $stmt->execute([$email]);
+        }
+        return (bool)$stmt->fetchColumn();
+    }
+
     // Find user by ID
     public function findById($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE id = ? LIMIT 1");
@@ -123,7 +135,7 @@ public function getAll($limit = 10, $offset = 0) {
     // Get all users as dropdown list (for admin manual order / checks)
     public function getDropdownList() {
         $stmt = $this->pdo->query(
-            "SELECT id, name FROM users WHERE role='user' ORDER BY name"
+            "SELECT id, name, room FROM users WHERE role='user' ORDER BY name"
         );
         return $stmt->fetchAll();
     }

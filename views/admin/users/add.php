@@ -1,6 +1,7 @@
 <?php
 	require_once BASE_PATH . '/includes/header.php'; 
 	require_once BASE_PATH . '/includes/navbar.php';
+    $rooms = $rooms ?? [];
 ?>
 
 <style>
@@ -211,7 +212,15 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="room">Room No.</label>
-                            <input type="text" id="room" name="room" placeholder="Room No." value="<?= htmlspecialchars($old['room'] ?? '') ?>">
+                            <select id="room" name="room" aria-label="Room" required>
+                                <option value="">Select room</option>
+                                <?php foreach ($rooms as $roomOption): ?>
+                                    <?php $roomVal = is_array($roomOption) ? ($roomOption['room'] ?? '') : $roomOption; ?>
+                                    <option value="<?= htmlspecialchars($roomVal) ?>" <?= (($old['room'] ?? '') === $roomVal) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($roomVal) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="ext">Ext.</label>
@@ -248,3 +257,19 @@
 </div>
 
 <?php require_once BASE_PATH . '/includes/footer.php'; ?>
+<script>
+(function(){
+    const roleSelect = document.getElementById('role');
+    const roomSelect = document.getElementById('room');
+    function syncRoomRequirement() {
+        const isAdmin = roleSelect.value === 'admin';
+        roomSelect.disabled = isAdmin;
+        roomSelect.required = !isAdmin;
+        if (isAdmin) {
+            roomSelect.value = '';
+        }
+    }
+    roleSelect.addEventListener('change', syncRoomRequirement);
+    syncRoomRequirement();
+})();
+</script>
